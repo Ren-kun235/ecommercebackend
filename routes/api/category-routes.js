@@ -83,7 +83,7 @@ router.put('/:id', (req, res) => {
 
     .then((category) => {
 
-      const categoryIds = category.map(({ tag_id }) => tag_id);
+      const categoryIds = category.map(({ tag_id }) => tag_id); //MIGHT CHANGE
 
       const newCategory = req.body.categoryIds
 
