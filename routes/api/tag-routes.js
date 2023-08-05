@@ -35,6 +35,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// use tagIds for insomnia
 router.post('/', (req, res) => {
   // create a new tag
   Tag.create(req.body)
@@ -64,6 +65,7 @@ router.post('/', (req, res) => {
   });
 });
 
+// use tagIds for insomnia
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
   Tag.update(req.body, {
@@ -73,40 +75,6 @@ router.put('/:id', (req, res) => {
     },
 
   })
-
-    .then((tag) => {
-
-      return tag.findAll({ where: { tag_id: req.params.id } });
-
-    })
-
-    .then((tag) => {
-
-      const tagIds = tag.map(({ tag_id }) => tag_id);
-
-      const newTag = req.body.tagIds
-
-        .filter((tag_id) => !tagIds.includes(tag_id))
-        .map((tag_id) => {
-
-          return {
-            tag_id: req.params.id,
-          };
-
-        });
-
-      const tagToRemove = tag
-        .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
-        .map(({ id }) => id);
-
-      return Promise.all([
-
-        tag.destroy({ where: { id: tagToRemove } }),
-        tag.bulkCreate(newTag),Tag
-
-      ]);
-
-    })
 
     .then((updatedTag) => res.json(updatedTag))
     .catch((err) => {

@@ -35,29 +35,16 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// use categoryIds for insomnia
 router.post('/', (req, res) => {
   // create a new category
   Category.create(req.body)
   .then((category) => {
-    if (req.body.categoryIds.length) {
-      
-      const categoryIdArr = req.body.categoryIds.map((category_id) => {
-        
-        return {
-          category_id: category.id,
-        };
-        
-      });
-
-      return category.bulkCreate(categoryIdArr);
-
-    }
 
     res.status(200).json(category);
 
   })
 
-  .then((categoryIds) => res.status(200).json(categoryIds))
   .catch((err) => {
     console.log(err);
     res.status(400).json(err);
@@ -65,6 +52,7 @@ router.post('/', (req, res) => {
 
 });
 
+// use categoryIds for insomnia
 router.put('/:id', (req, res) => {
 
   Category.update(req.body, {
@@ -74,40 +62,6 @@ router.put('/:id', (req, res) => {
     },
 
   })
-
-    .then((category) => {
-
-      return category.findAll({ where: { category_id: req.params.id } });
-
-    })
-
-    .then((category) => {
-
-      const categoryIds = category.map(({ tag_id }) => tag_id); //MIGHT CHANGE
-
-      const newCategory = req.body.categoryIds
-
-        .filter((category_id) => !categoryIds.includes(category_id))
-        .map((category_id) => {
-
-          return {
-            category_id: req.params.id,
-          };
-
-        });
-
-      const categoryToRemove = category
-        .filter(({ category_id }) => !req.body.categoryIds.includes(category_id))
-        .map(({ id }) => id);
-
-      return Promise.all([
-
-        category.destroy({ where: { id: categoryToRemove } }),
-        category.bulkCreate(newCategory),
-
-      ]);
-
-    })
 
     .then((updatedCategory) => res.json(updatedCategory))
     .catch((err) => {

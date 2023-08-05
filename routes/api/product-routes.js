@@ -39,6 +39,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // create new product
+// use tagIds when using insomnia
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
@@ -70,7 +71,8 @@ router.post('/', (req, res) => {
     });
 });
 
-// update product
+// update product 
+// use tagIds when using insomnia
 router.put('/:id', (req, res) => {
   // update product data
   Product.update(req.body, {
